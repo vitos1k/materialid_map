@@ -1,6 +1,20 @@
 import bpy
+from random import randint,seed
 maxim = len(bpy.data.materials)
 
+
+def ranomizelist(sed = None):
+    seed(sed)
+    randlist = []
+    countlist = [x for x in range(maxim)]
+    for k in range(maxim):
+        temp_pos = randint(0,len(countlist)-1)
+        temp_val = countlist[temp_pos]
+        randlist.append(temp_val)
+        countlist.pop(temp_pos)
+    print(randlist)
+    return randlist
+        
 def create_ids(material):
     nodes = material.node_tree.nodes
     co = (0,0)
@@ -84,10 +98,17 @@ if __name__ == "__main__":
         bpy.ops.cycles.add_aov()
         aovs = [aov.values() for aov in bpy.context.view_layer.cycles['aovs']]
         bpy.context.view_layer.cycles['aovs'][len(aovs)-1].update({'name':'MatID','conflict': '', 'type': 1})
-
-
+        
+        
+    ###########################################################RANDOM SEED###################################################
+        
+    set_seed = 0    
+    
+    #########################################################################################################################    
+    
+    valuelist = ranomizelist(set_seed)
     for i,mat in enumerate(bpy.data.materials):
-        mat.pass_index = i
+        mat.pass_index = valuelist[i]
         if mat.use_nodes:
             id_created = False
             for node in mat.node_tree.nodes:
